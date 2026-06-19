@@ -1,0 +1,31 @@
+# CellPlateVision runtime configuration.
+# Values here are overridden by CPV_* environment variables (see .env.example).
+
+# Dish sizes (mm) expected in the imaging setup.
+dish_sizes_mm: [35, 60, 100]
+# Fixed camera-to-stage distance (mm) for the imaging rig (see docs/prototype-roadmap.md).
+camera_height_mm: 250
+# Confluence ratio (0-1) above which a dish is classified as "growing".
+confluence_threshold: 0.20
+# Segmentation backend: otsu | cellpose | landinglens.
+backend: otsu
+# Use GPU for Cellpose (cpsam_v2). CPU-default keeps the prototype hardware-agnostic.
+use_gpu: false
+
+# Hough circle dish-detection parameters (calibrated per imaging setup in M1).
+hough:
+  dp: 1.2
+  min_dist: 200.0
+  param1: 100.0
+  param2: 30.0
+  min_radius_ratio: 0.30
+  max_radius_ratio: 0.95
+
+# Otsu segmentation parameters.
+otsu:
+  flat_field_blur_sigma: 25.0
+  min_object_size: 64
+
+# eLabFTW REST API (local Docker dev instance by default; see docker-compose.dev.yml in M2).
+elabftw_host: "http://localhost:3148/api/v2"
+elabftw_experiment_id: 1

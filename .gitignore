@@ -12,3 +12,11 @@ venv/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.pyright_cache/
+.coverage
+htmlcov/
+
+# Local data and generated fixtures
+data/raw/
+data/processed/
+tests/fixtures/synthetic/
