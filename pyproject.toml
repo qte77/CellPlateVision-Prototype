@@ -1,0 +1,88 @@
+[project]
+name = "cellplatevision"
+version = "0.1.0"
+description = "Automated cell-growth detection on round Petri dishes via image-based confluence estimation."
+readme = "README.md"
+license = "Apache-2.0"
+authors = [{ name = "qte77" }]
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "numpy>=2.1",
+    "pillow>=11.0",
+    "pydantic>=2.10",
+    "pydantic-settings>=2.6",
+    "pyyaml>=6.0",
+]
+
+[project.scripts]
+cellplatevision = "cellplatevision.cli:main"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.14.0",
+    "pyright>=1.1.400",
+    "complexipy>=5.5.0",
+    "requests>=2.32",  # used by scripts/download_datasets.py (dev/setup tool)
+]
+test = [
+    "pytest>=8.3",
+    "pytest-cov>=6.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/cellplatevision"]
+
+[tool.uv]
+default-groups = ["dev", "test"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E", "F", "I", "N", "W", "UP", "B", "S", "SIM", "RUF",
+    "PT", "ANN", "TC", "PGH", "C90", "D", "TRY",
+]
+ignore = ["TRY003"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "D"]
+"scripts/**" = ["D", "ANN"]
+
+[tool.pyright]
+pythonVersion = "3.12"
+typeCheckingMode = "basic"
+extraPaths = ["src"]
+include = ["src"]
+reportMissingImports = "error"
+reportMissingTypeStubs = "none"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--strict-markers -q --tb=short -m 'not network'"
+markers = [
+    "network: tests requiring network access (opt in via `pytest -m network`)",
+]
+
+[tool.coverage.run]
+source = ["cellplatevision"]
+
+[tool.coverage.report]
+show_missing = true
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]
