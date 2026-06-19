@@ -25,10 +25,12 @@ class HoughParams(BaseModel):
 
 
 class OtsuParams(BaseModel):
-    """Otsu segmentation parameters (used in M1)."""
+    """Otsu segmentation parameters."""
 
+    flat_field: bool = False
     flat_field_blur_sigma: float = 25.0
     min_object_size: int = 64
+    min_contrast_ratio: float = 0.15
 
 
 class Settings(BaseSettings):
