@@ -1,0 +1,44 @@
+---
+# Local eLabFTW for development and the `network`-marked integration tests.
+#
+# One-time setup:
+#   1. Generate a secret key and export it:
+#        export ELABFTW_SECRET_KEY=$(docker run --rm elabftw/elabimg:stable bin/console generate:secret)
+#   2. make elab-up
+#   3. docker exec -it cpv-elabftw bin/init db:install
+#   4. Open http://localhost:3148, create a user, generate an API key, then set
+#      CPV_ELABFTW_API_KEY in your environment before running `pytest -m network`.
+#
+# Passwords below are local-dev placeholders only.
+services:
+  elabftw:
+    image: elabftw/elabimg:stable
+    container_name: cpv-elabftw
+    restart: on-failure
+    environment:
+      DB_HOST: db
+      DB_NAME: elabftw
+      DB_USER: elabftw
+      DB_PASSWORD: dev_db_password_change_me
+      SECRET_KEY: ${ELABFTW_SECRET_KEY}
+      SITE_URL: http://localhost:3148
+      DISABLE_HTTPS: "true"
+      DEV_MODE: "true"
+    ports:
+      - "3148:443"
+    depends_on:
+      - db
+  db:
+    image: mysql:8.4
+    container_name: cpv-elabftw-db
+    restart: on-failure
+    environment:
+      MYSQL_ROOT_PASSWORD: dev_root_password_change_me
+      MYSQL_DATABASE: elabftw
+      MYSQL_USER: elabftw
+      MYSQL_PASSWORD: dev_db_password_change_me
+    volumes:
+      - cpv_elab_db:/var/lib/mysql
+
+volumes:
+  cpv_elab_db:
