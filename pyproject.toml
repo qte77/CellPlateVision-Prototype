@@ -8,10 +8,13 @@ authors = [{ name = "qte77" }]
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "numpy>=2.1",
+    "opencv-python-headless>=4.10",
     "pillow>=11.0",
     "pydantic>=2.10",
     "pydantic-settings>=2.6",
     "pyyaml>=6.0",
+    "scikit-image>=0.24",
+    "scipy>=1.14",
 ]
 
 [project.scripts]

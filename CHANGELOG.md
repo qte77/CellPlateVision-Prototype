@@ -8,6 +8,12 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- **M1 detection + segmentation (Tier 1)**: `SingleDishFinder` (Hough circle
+  transform with a contour fallback) and `OtsuBackend` (Otsu thresholding inside
+  the dish, optional flat-field correction, connected-component cleanup, and a
+  P20-P80 contrast low-confidence flag), plus a shared `imaging.to_grayscale`
+  helper and `circular_mask`. Added opencv/scikit-image/scipy dependencies.
+
 - **M0 scaffold**: uv/hatchling `src/` package, runtime config via
   `pydantic-settings` (`config.yaml` + `CPV_*` env), and the pipeline skeleton
   (`dish_finder`, `segmentation`, `confluence`, `classify`, `pipeline`,

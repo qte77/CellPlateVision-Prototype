@@ -23,8 +23,15 @@ hough:
 
 # Otsu segmentation parameters.
 otsu:
+  # Enable flat-field correction for real images with uneven illumination
+  # (vignetting). Off by default; unneeded under even lighting.
+  flat_field: false
   flat_field_blur_sigma: 25.0
+  # Minimum connected-component size (px) kept after thresholding.
   min_object_size: 64
+  # Relative P20-P80 intensity spread below which a dish is flagged low-confidence
+  # (near-empty or near-confluent, where Otsu is unreliable).
+  min_contrast_ratio: 0.15
 
 # eLabFTW REST API (local Docker dev instance by default; see docker-compose.dev.yml in M2).
 elabftw_host: "http://localhost:3148/api/v2"
