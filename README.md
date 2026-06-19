@@ -1,5 +1,11 @@
 # CellPlateVision
 
+[![Version](https://img.shields.io/badge/version-0.0.0-8A2BE2)](README.md)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
+[![Dependabot Updates](https://github.com/qte77/CellPlateVision-Prototype/actions/workflows/dependabot/dependabot-updates/badge.svg?branch=main)](https://github.com/qte77/CellPlateVision-Prototype/actions/workflows/dependabot/dependabot-updates)
+[![CodeQL](https://github.com/qte77/CellPlateVision-Prototype/actions/workflows/codeql.yaml/badge.svg?branch=main)](https://github.com/qte77/CellPlateVision-Prototype/actions/workflows/codeql.yaml)
+[![CodeFactor](https://www.codefactor.io/repository/github/qte77/CellPlateVision-Prototype/badge/main)](https://www.codefactor.io/repository/github/qte77/CellPlateVision-Prototype)
+
 ![CellPlateVision — Automated cell growth detection on Petri dishes.](.github/social-preview.png)
 
 > **Status: Prototype / Research**

@@ -1,0 +1,42 @@
+---
+# https://docs.github.com/code-security/dependabot/working-with-dependabot/dependabot-options-reference
+#
+# Adopted from qte77/repo-baseline L2-ci-files/dependabot (issue #9).
+# No uv.lock / requirements.txt yet, so per the baseline decision tree this is
+# the "else" branch: github-actions live now, Python (uv) ecosystem ready below.
+#
+# "github-actions" keeps the action references in .github/workflows/ up to date.
+# This is the only live ecosystem while the repo is docs-only.
+#
+# The Python ("uv") ecosystem is intentionally disabled below: with no
+# pyproject.toml / uv.lock present yet, dependabot would error on every run.
+# Uncomment it the moment the package is scaffolded (use "pip" instead of "uv"
+# if the project ships requirements.txt-style manifests rather than a uv layout).
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(ci)"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    groups:
+      github-actions:
+        patterns: ["*"]
+
+  # Enable once Python source (pyproject.toml + uv.lock) is scaffolded:
+  # - package-ecosystem: "uv"
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+  #   commit-message:
+  #     prefix: "chore(deps)"
+  #   labels:
+  #     - "dependencies"
+  #     - "python"
+  #   groups:
+  #     python-deps:
+  #       patterns: ["*"]
