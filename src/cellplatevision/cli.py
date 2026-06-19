@@ -24,6 +24,9 @@ def build_parser() -> argparse.ArgumentParser:
     run_parser.add_argument("--image", type=Path, required=True, help="Path to the dish image")
     run_parser.add_argument("--config", type=Path, default=None, help="Path to a config.yaml file")
     run_parser.add_argument(
+        "--output", type=Path, default=None, help="Path for the annotated image"
+    )
+    run_parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Parse inputs and load config without running the pipeline",
@@ -48,6 +51,6 @@ def main(argv: list[str] | None = None) -> int:
     settings = load_settings(args.config)
     if args.dry_run:
         return 0
-    label = run_pipeline(args.image, settings)
-    print(label)
+    result = run_pipeline(args.image, settings, output_path=args.output)
+    print(f"{result.label} (confluence {result.confluence * 100:.1f}%)")
     return 0

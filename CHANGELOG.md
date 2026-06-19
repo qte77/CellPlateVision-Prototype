@@ -8,6 +8,12 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- **M3 end-to-end pipeline**: `run_pipeline` (load -> detect -> segment ->
+  confluence -> classify) returning a `PipelineResult`, with optional annotated
+  output (dish boundary + cell overlay + confluence text), a wired `cellplatevision
+  run` CLI (`--image/--config/--output/--dry-run`), `imaging` load/save/BGR helpers,
+  and a `scripts/smoke_test.py` for batch runs over local datasets.
+
 - **M2 eLabFTW integration**: `ElabClient` wrapping the `elabapi-python` SDK
   (`get_experiment` / `patch_experiment` / `upload_file`) with raw-API-key auth,
   a `docker-compose.dev.yml` local instance plus `make elab_up` / `elab_down`, and
