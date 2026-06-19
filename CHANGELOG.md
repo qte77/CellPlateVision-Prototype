@@ -8,6 +8,11 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- **M2 eLabFTW integration**: `ElabClient` wrapping the `elabapi-python` SDK
+  (`get_experiment` / `patch_experiment` / `upload_file`) with raw-API-key auth,
+  a `docker-compose.dev.yml` local instance plus `make elab_up` / `elab_down`, and
+  offline wiring tests plus a `network`-marked round-trip test (excluded by default).
+
 - **M1 detection + segmentation (Tier 1)**: `SingleDishFinder` (Hough circle
   transform with a contour fallback) and `OtsuBackend` (Otsu thresholding inside
   the dish, optional flat-field correction, connected-component cleanup, and a

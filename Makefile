@@ -1,6 +1,6 @@
 .SILENT:
 .ONESHELL:
-.PHONY: setup lint autofix check_types check_complexity lint_md test test_cov validate clean help
+.PHONY: setup lint autofix check_types check_complexity lint_md test test_cov validate elab_up elab_down clean help
 .DEFAULT_GOAL := help
 
 COV_PKG := cellplatevision
@@ -41,6 +41,12 @@ validate:  ## CI gate: lint + format + types + complexity + tests
 	uv run pyright src
 	uv run complexipy src --max-complexity-allowed 10
 	uv run pytest --cov=$(COV_PKG) --cov-fail-under=0
+
+elab_up:  ## start local eLabFTW dev instance (needs ELABFTW_SECRET_KEY)
+	docker compose -f docker-compose.dev.yml up -d
+
+elab_down:  ## stop local eLabFTW dev instance
+	docker compose -f docker-compose.dev.yml down
 
 clean:  ## remove tooling caches
 	rm -rf .pytest_cache .ruff_cache .pyright_cache .coverage htmlcov
