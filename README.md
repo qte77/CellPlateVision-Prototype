@@ -36,6 +36,9 @@ Apache-2.0 — see [LICENSE](LICENSE)
 
 ## References
 
+- [Building a Trustworthy Agent Loop for a Physical Lab](https://qte77.github.io/open-self-driving-lab-agent-loop/) — uses this project as the *perceive* step of a self-driving-lab agent loop
+- [A $150 Pipetting Robot from a Stock 3D Printer](https://qte77.github.io/pipettebot-sub-150-pipetting-robot/) — companion build; closes the loop on the outcome side (pipette → grow → image → measure)
+
 [cellpose]: https://github.com/MouseLand/cellpose
 [elabftw]: https://www.elabftw.net/
 [fiji]: https://fiji.sc/
