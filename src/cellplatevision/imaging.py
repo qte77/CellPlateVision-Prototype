@@ -65,5 +65,9 @@ def save_image(path: Path, image: NDArray[np.uint8]) -> None:
     Args:
         path: Destination path.
         image: Image array to write.
+
+    Raises:
+        OSError: If the image cannot be written (e.g. unwritable path).
     """
-    cv2.imwrite(str(path), image)
+    if not cv2.imwrite(str(path), image):
+        raise OSError(f"could not write image: {path}")
