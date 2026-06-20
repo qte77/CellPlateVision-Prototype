@@ -61,6 +61,24 @@ class SegmentationBackend(ABC):
             A boolean mask where ``True`` marks pixels classified as cells.
         """
 
+    def is_low_confidence(
+        self,
+        image: NDArray[np.uint8],
+        dish_mask: NDArray[np.bool_],
+    ) -> bool:
+        """Whether the backend deems the segmentation unreliable.
+
+        Backends may override; the default assumes the result is reliable.
+
+        Args:
+            image: Grayscale or BGR image as a NumPy array.
+            dish_mask: Boolean mask of the dish interior.
+
+        Returns:
+            ``False`` by default.
+        """
+        return False
+
 
 class OtsuBackend(SegmentationBackend):
     """Classical Otsu-threshold segmentation backend.

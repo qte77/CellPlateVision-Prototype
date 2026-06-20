@@ -12,12 +12,10 @@ import cv2
 import numpy as np
 from pydantic import BaseModel
 
-from cellplatevision.backends import CellposeBackend, get_backend
-from cellplatevision.classify import classify_growth
-from cellplatevision.confluence import compute_confluence
+from cellplatevision.analysis import classify_growth, compute_confluence
+from cellplatevision.backends import get_backend
 from cellplatevision.dish_finder import ROI, SingleDishFinder, circular_mask
 from cellplatevision.imaging import load_image, save_image, to_bgr
-from cellplatevision.segmentation import OtsuBackend
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -25,7 +23,6 @@ if TYPE_CHECKING:
     from numpy.typing import NDArray
 
     from cellplatevision.config import Settings
-    from cellplatevision.segmentation import SegmentationBackend
 
 
 class DishNotFoundError(RuntimeError):
@@ -70,17 +67,6 @@ def _annotate(
     return np.asarray(canvas, dtype=np.uint8)
 
 
-def _is_low_confidence(
-    backend: SegmentationBackend,
-    image: NDArray[np.uint8],
-    dish_mask: NDArray[np.bool_],
-) -> bool:
-    """Return the backend's low-confidence flag (only ``OtsuBackend`` provides one)."""
-    if isinstance(backend, OtsuBackend):
-        return backend.is_low_confidence(image, dish_mask)
-    return False
-
-
 def _segment(
     image: NDArray[np.uint8],
     dish_mask: NDArray[np.bool_],
@@ -99,12 +85,11 @@ def _segment(
     """
     backend = get_backend(settings.backend, settings)
     cell_mask = backend.segment(image, dish_mask)
-    low_confidence = _is_low_confidence(backend, image, dish_mask)
+    low_confidence = backend.is_low_confidence(image, dish_mask)
     if not (low_confidence and settings.escalate_on_low_confidence and settings.backend == "otsu"):
         return cell_mask, low_confidence
-    model = settings.cellpose_model_gpu if settings.use_gpu else settings.cellpose_model
     try:
-        escalated = CellposeBackend(model=model, use_gpu=settings.use_gpu).segment(image, dish_mask)
+        escalated = get_backend("cellpose", settings).segment(image, dish_mask)
     except ImportError:
         return cell_mask, low_confidence
     return escalated, False

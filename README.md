@@ -6,8 +6,6 @@
 [![CodeQL](https://github.com/qte77/CellPlateVision-Prototype/actions/workflows/codeql.yaml/badge.svg?branch=main)](https://github.com/qte77/CellPlateVision-Prototype/actions/workflows/codeql.yaml)
 [![CodeFactor](https://www.codefactor.io/repository/github/qte77/CellPlateVision-Prototype/badge/main)](https://www.codefactor.io/repository/github/qte77/CellPlateVision-Prototype)
 
-![CellPlateVision — Automated cell growth detection on Petri dishes.](.github/social-preview.png)
-
 > **Status: Prototype / Research**
 
 Automated cell culture growth detection on round Petri dishes using

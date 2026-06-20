@@ -2,13 +2,17 @@
 
 from pathlib import Path
 
+import numpy as np
+
 from cellplatevision.cli import main
 from cellplatevision.imaging import save_image
 from tests.generate_synthetic import generate_dish
 
 
-def test_no_command_prints_help() -> None:
-    assert main([]) == 0
+def test_run_returns_error_code_when_no_dish(tmp_path: Path) -> None:
+    blank = tmp_path / "blank.png"
+    save_image(blank, np.zeros((128, 128), dtype=np.uint8))
+    assert main(["run", "--image", str(blank)]) == 1
 
 
 def test_dry_run_returns_zero(tmp_path: Path) -> None:

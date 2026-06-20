@@ -1,0 +1,17 @@
+{
+  "extraKnownMarketplaces": {
+    "qte77-claude-code-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "qte77/claude-code-plugins"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "python-dev@qte77-claude-code-plugins": true,
+    "cc-meta@qte77-claude-code-plugins": true,
+    "codebase-tools@qte77-claude-code-plugins": true,
+    "commit-helper@qte77-claude-code-plugins": true,
+    "gha-dev@qte77-claude-code-plugins": true
+  }
+}

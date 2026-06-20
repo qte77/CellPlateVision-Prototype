@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
 
 from cellplatevision import __version__
 from cellplatevision.config import load_settings
-from cellplatevision.pipeline import run_pipeline
+from cellplatevision.pipeline import DishNotFoundError, run_pipeline
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -51,6 +52,10 @@ def main(argv: list[str] | None = None) -> int:
     settings = load_settings(args.config)
     if args.dry_run:
         return 0
-    result = run_pipeline(args.image, settings, output_path=args.output)
+    try:
+        result = run_pipeline(args.image, settings, output_path=args.output)
+    except (DishNotFoundError, FileNotFoundError) as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
     print(f"{result.label} (confluence {result.confluence * 100:.1f}%)")
     return 0

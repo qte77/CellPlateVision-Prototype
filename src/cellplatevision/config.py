@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import yaml
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 if TYPE_CHECKING:
@@ -50,7 +50,7 @@ class Settings(BaseSettings):
     otsu: OtsuParams = Field(default_factory=OtsuParams)
     elabftw_host: str = "http://localhost:3148/api/v2"
     elabftw_experiment_id: int = 1
-    elabftw_api_key: str = ""
+    elabftw_api_key: SecretStr = SecretStr("")
 
 
 def load_settings(config_path: Path | None = None) -> Settings:
