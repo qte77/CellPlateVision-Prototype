@@ -43,7 +43,8 @@ Cellpose is at **4.2.1.1**; eLabFTW auth is a **raw API key** header (not `Beare
 - **Scientific Data 2023** (CC-BY 4.0) — 369 dish images, 56,865 annotated colonies.
 - **LIVECell** (CC-BY 4.0) — phase-contrast cells for segmentation benchmarking.
 
-CI uses only **synthetic fixtures** (no license or network dependency).
+CI uses only **synthetic fixtures** (no license or network dependency). The download
+helper reads this dataset registry from `scripts/datasets.json`.
 
 ## Milestone roadmap
 

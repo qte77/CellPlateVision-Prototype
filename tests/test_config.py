@@ -2,7 +2,8 @@
 
 from pathlib import Path
 
-from pydantic import SecretStr
+import pytest
+from pydantic import SecretStr, ValidationError
 
 from cellplatevision.config import Settings, load_settings
 
@@ -25,3 +26,15 @@ def test_api_key_is_masked() -> None:
     assert "supersecret" not in repr(settings)
     assert "supersecret" not in str(settings.model_dump())
     assert settings.elabftw_api_key.get_secret_value() == "supersecret"
+
+
+def test_env_overrides_yaml_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    cfg = tmp_path / "config.yaml"
+    cfg.write_text("backend: otsu\n", encoding="utf-8")
+    monkeypatch.setenv("CPV_BACKEND", "cellpose")
+    assert load_settings(cfg).backend == "cellpose"  # env wins over the file
+
+
+def test_invalid_host_raises() -> None:
+    with pytest.raises(ValidationError):
+        Settings.model_validate({"elabftw_host": "not a url"})

@@ -39,3 +39,10 @@ def test_classify_threshold_is_inclusive() -> None:
 
 def test_classify_low_confidence_overrides_threshold() -> None:
     assert classify_growth(0.9, 0.2, low_confidence=True) == "low_confidence"
+
+
+def test_classify_rejects_out_of_range_confluence() -> None:
+    with pytest.raises(ValueError, match="confluence"):
+        classify_growth(1.5, 0.2)
+    with pytest.raises(ValueError, match="confluence"):
+        classify_growth(-0.1, 0.2)

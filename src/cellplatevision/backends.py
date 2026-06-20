@@ -41,6 +41,7 @@ class CellposeBackend(SegmentationBackend):
         """
         self._model = model
         self._use_gpu = use_gpu
+        self._model_obj: Any = None
 
     def segment(
         self,
@@ -48,6 +49,9 @@ class CellposeBackend(SegmentationBackend):
         dish_mask: NDArray[np.bool_],
     ) -> NDArray[np.bool_]:
         """Segment cells with Cellpose, intersected with the dish mask.
+
+        The Cellpose model is loaded once (weights read from disk) and reused across
+        calls.
 
         Args:
             image: Grayscale or BGR image as a NumPy array.
@@ -59,12 +63,15 @@ class CellposeBackend(SegmentationBackend):
         Raises:
             ImportError: If the optional ``cellpose`` dependency is not installed.
         """
-        try:
-            cellpose_models: Any = importlib.import_module("cellpose.models")
-        except ImportError as exc:
-            raise ImportError(_CELLPOSE_HINT) from exc
-        model = cellpose_models.CellposeModel(gpu=self._use_gpu, model_type=self._model)
-        masks = model.eval(to_grayscale(image))[0]
+        if self._model_obj is None:
+            try:
+                cellpose_models: Any = importlib.import_module("cellpose.models")
+            except ImportError as exc:
+                raise ImportError(_CELLPOSE_HINT) from exc
+            self._model_obj = cellpose_models.CellposeModel(
+                gpu=self._use_gpu, model_type=self._model
+            )
+        masks = self._model_obj.eval(to_grayscale(image))[0]
         labels = np.asarray(masks, dtype=np.intp)
         return (labels > 0) & dish_mask
 

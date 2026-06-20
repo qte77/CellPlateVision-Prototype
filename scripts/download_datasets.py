@@ -12,30 +12,14 @@ See ``docs/prototype-roadmap.md`` for the full list, licenses, and links.
 
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
 import requests
 
 DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "raw"
-
-DATASETS = {
-    "AGAR": {
-        "url": "https://agar.neurosys.com/",
-        "license": "CC-BY-NC 2.0",
-        "note": "18k top-down Petri dish photos. Free sample + full set via registration.",
-    },
-    "scientific-data-2023": {
-        "url": "https://www.nature.com/articles/s41597-023-02404-8",
-        "license": "CC-BY 4.0",
-        "note": "369 Petri-dish images, 56,865 annotated colonies (DOI landing page).",
-    },
-    "LIVECell": {
-        "url": "https://github.com/sartorius-research/LIVECell",
-        "license": "CC-BY 4.0",
-        "note": "Phase-contrast cell images (cropped wells; segmentation benchmarking).",
-    },
-}
+DATASETS = json.loads(Path(__file__).with_name("datasets.json").read_text(encoding="utf-8"))
 
 
 def print_registry():
