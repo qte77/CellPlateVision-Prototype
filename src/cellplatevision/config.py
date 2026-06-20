@@ -4,13 +4,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import yaml
-from pydantic import BaseModel, Field, SecretStr
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import AnyHttpUrl, BaseModel, Field, SecretStr
+from pydantic_settings import BaseSettings, SettingsConfigDict, YamlConfigSettingsSource
 
 if TYPE_CHECKING:
     from pathlib import Path
-    from typing import Any
+
+    from pydantic_settings import PydanticBaseSettingsSource
 
 
 class HoughParams(BaseModel):
@@ -34,9 +34,15 @@ class OtsuParams(BaseModel):
 
 
 class Settings(BaseSettings):
-    """Top-level CellPlateVision configuration."""
+    """Top-level CellPlateVision configuration.
 
-    model_config = SettingsConfigDict(env_prefix="CPV_", env_nested_delimiter="__", extra="ignore")
+    Resolution precedence (highest first): constructor args, ``CPV_*`` environment
+    variables, then the YAML file set via :func:`load_settings`.
+    """
+
+    model_config = SettingsConfigDict(
+        env_prefix="CPV_", env_nested_delimiter="__", extra="ignore", yaml_file=None
+    )
 
     dish_sizes_mm: list[int] = Field(default_factory=lambda: [35, 60, 100])
     camera_height_mm: int = 250
@@ -48,13 +54,31 @@ class Settings(BaseSettings):
     escalate_on_low_confidence: bool = True
     hough: HoughParams = Field(default_factory=HoughParams)
     otsu: OtsuParams = Field(default_factory=OtsuParams)
-    elabftw_host: str = "http://localhost:3148/api/v2"
+    elabftw_host: AnyHttpUrl = AnyHttpUrl("http://localhost:3148/api/v2")
     elabftw_experiment_id: int = 1
     elabftw_api_key: SecretStr = SecretStr("")
 
+    @classmethod
+    def settings_customise_sources(
+        cls,
+        settings_cls: type[BaseSettings],
+        init_settings: PydanticBaseSettingsSource,
+        env_settings: PydanticBaseSettingsSource,
+        dotenv_settings: PydanticBaseSettingsSource,
+        file_secret_settings: PydanticBaseSettingsSource,
+    ) -> tuple[PydanticBaseSettingsSource, ...]:
+        """Order sources so env vars override the YAML file."""
+        return (
+            init_settings,
+            env_settings,
+            dotenv_settings,
+            YamlConfigSettingsSource(settings_cls),
+            file_secret_settings,
+        )
+
 
 def load_settings(config_path: Path | None = None) -> Settings:
-    """Load settings from a YAML file, overlaid by ``CPV_*`` environment variables.
+    """Load settings from a YAML file, overridden by ``CPV_*`` environment variables.
 
     Args:
         config_path: Path to a YAML config file; if ``None`` or missing, defaults
@@ -63,9 +87,8 @@ def load_settings(config_path: Path | None = None) -> Settings:
     Returns:
         A validated :class:`Settings` instance.
     """
-    data: dict[str, Any] = {}
-    if config_path is not None and config_path.is_file():
-        loaded = yaml.safe_load(config_path.read_text(encoding="utf-8"))
-        if isinstance(loaded, dict):
-            data = loaded
-    return Settings(**data)
+    Settings.model_config["yaml_file"] = str(config_path) if config_path is not None else None
+    try:
+        return Settings()
+    finally:
+        Settings.model_config["yaml_file"] = None
