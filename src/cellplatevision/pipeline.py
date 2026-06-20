@@ -12,6 +12,7 @@ import cv2
 import numpy as np
 from pydantic import BaseModel
 
+from cellplatevision.backends import CellposeBackend, get_backend
 from cellplatevision.classify import classify_growth
 from cellplatevision.confluence import compute_confluence
 from cellplatevision.dish_finder import ROI, SingleDishFinder, circular_mask
@@ -24,6 +25,7 @@ if TYPE_CHECKING:
     from numpy.typing import NDArray
 
     from cellplatevision.config import Settings
+    from cellplatevision.segmentation import SegmentationBackend
 
 
 class DishNotFoundError(RuntimeError):
@@ -68,6 +70,46 @@ def _annotate(
     return np.asarray(canvas, dtype=np.uint8)
 
 
+def _is_low_confidence(
+    backend: SegmentationBackend,
+    image: NDArray[np.uint8],
+    dish_mask: NDArray[np.bool_],
+) -> bool:
+    """Return the backend's low-confidence flag (only ``OtsuBackend`` provides one)."""
+    if isinstance(backend, OtsuBackend):
+        return backend.is_low_confidence(image, dish_mask)
+    return False
+
+
+def _segment(
+    image: NDArray[np.uint8],
+    dish_mask: NDArray[np.bool_],
+    settings: Settings,
+) -> tuple[NDArray[np.bool_], bool]:
+    """Segment with the configured backend, escalating Otsu low-confidence to Cellpose.
+
+    Args:
+        image: Grayscale or BGR image as a NumPy array.
+        dish_mask: Boolean mask of the dish interior.
+        settings: Runtime configuration.
+
+    Returns:
+        ``(cell_mask, low_confidence)``. Escalation is a graceful no-op if Cellpose
+        is not installed.
+    """
+    backend = get_backend(settings.backend, settings)
+    cell_mask = backend.segment(image, dish_mask)
+    low_confidence = _is_low_confidence(backend, image, dish_mask)
+    if not (low_confidence and settings.escalate_on_low_confidence and settings.backend == "otsu"):
+        return cell_mask, low_confidence
+    model = settings.cellpose_model_gpu if settings.use_gpu else settings.cellpose_model
+    try:
+        escalated = CellposeBackend(model=model, use_gpu=settings.use_gpu).segment(image, dish_mask)
+    except ImportError:
+        return cell_mask, low_confidence
+    return escalated, False
+
+
 def run_pipeline(
     image_path: Path,
     settings: Settings,
@@ -92,10 +134,8 @@ def run_pipeline(
         raise DishNotFoundError(f"no dish detected in {image_path}")
     roi = rois[0]
     dish_mask = circular_mask((image.shape[0], image.shape[1]), roi)
-    backend = OtsuBackend(settings.otsu)
-    cell_mask = backend.segment(image, dish_mask)
+    cell_mask, low_confidence = _segment(image, dish_mask, settings)
     confluence = compute_confluence(cell_mask, dish_mask)
-    low_confidence = backend.is_low_confidence(image, dish_mask)
     label = classify_growth(
         confluence, settings.confluence_threshold, low_confidence=low_confidence
     )
