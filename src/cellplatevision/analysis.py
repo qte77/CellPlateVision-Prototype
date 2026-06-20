@@ -58,7 +58,12 @@ def classify_growth(
     Returns:
         ``"low_confidence"`` if flagged, else ``"growing"`` when confluence meets
         the threshold, else ``"not_growing"``.
+
+    Raises:
+        ValueError: If ``confluence`` is outside ``[0.0, 1.0]``.
     """
+    if not 0.0 <= confluence <= 1.0:
+        raise ValueError(f"confluence must be in [0, 1], got {confluence}")
     if low_confidence:
         return "low_confidence"
     return "growing" if confluence >= threshold else "not_growing"
