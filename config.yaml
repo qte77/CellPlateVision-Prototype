@@ -11,6 +11,11 @@ confluence_threshold: 0.20
 backend: otsu
 # Use GPU for Cellpose (cpsam_v2). CPU-default keeps the prototype hardware-agnostic.
 use_gpu: false
+# Cellpose model names (CPU vs GPU). Requires the optional 'cellpose' dependency.
+cellpose_model: cyto3
+cellpose_model_gpu: cpsam_v2
+# When the Otsu backend flags low confidence, retry with Cellpose if it is installed.
+escalate_on_low_confidence: true
 
 # Hough circle dish-detection parameters (calibrated per imaging setup in M1).
 hough:

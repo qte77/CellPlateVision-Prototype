@@ -8,6 +8,12 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- **M4 backend plugin (Tier 2)**: config-driven segmentation backend selection
+  (`backend: otsu | cellpose | landinglens`) via `backends.get_backend`, a lazily
+  imported optional `CellposeBackend` (cyto3 / cpsam_v2), a documented
+  `LandingLensBackend` stub, and pipeline auto-escalation from Otsu low-confidence to
+  Cellpose (a graceful no-op when cellpose is not installed). Added a backend benchmark
+  script. Cellpose/LandingLens are optional manual installs, not CI dependencies.
 - **M3 end-to-end pipeline**: `run_pipeline` (load -> detect -> segment ->
   confluence -> classify) returning a `PipelineResult`, with optional annotated
   output (dish boundary + cell overlay + confluence text), a wired `cellplatevision
