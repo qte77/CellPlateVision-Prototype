@@ -1,0 +1,17 @@
+{
+  "AGAR": {
+    "url": "https://agar.neurosys.com/",
+    "license": "CC-BY-NC 2.0",
+    "note": "18k top-down Petri dish photos. Free sample + full set via registration."
+  },
+  "scientific-data-2023": {
+    "url": "https://www.nature.com/articles/s41597-023-02404-8",
+    "license": "CC-BY 4.0",
+    "note": "369 Petri-dish images, 56,865 annotated colonies (DOI landing page)."
+  },
+  "LIVECell": {
+    "url": "https://github.com/sartorius-research/LIVECell",
+    "license": "CC-BY 4.0",
+    "note": "Phase-contrast cell images (cropped wells; segmentation benchmarking)."
+  }
+}
