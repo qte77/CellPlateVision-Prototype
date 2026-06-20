@@ -6,6 +6,19 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- Config loads via pydantic-settings `YamlConfigSettingsSource`, so `CPV_*` environment
+  variables now override the YAML file (correct precedence); `elabftw_host` is validated
+  as a URL (`AnyHttpUrl`). The dataset registry moved out of
+  `scripts/download_datasets.py` into `scripts/datasets.json`. The Cellpose model is
+  loaded once and cached across `segment()` calls.
+
+### Fixed
+
+- `classify_growth` rejects out-of-range confluence (raises `ValueError`); the CLI exits
+  with code 2 on a missing/unknown subcommand.
+
 ### Added
 
 - **M4 backend plugin (Tier 2)**: config-driven segmentation backend selection
