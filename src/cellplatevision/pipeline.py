@@ -12,9 +12,8 @@ import cv2
 import numpy as np
 from pydantic import BaseModel
 
+from cellplatevision.analysis import classify_growth, compute_confluence
 from cellplatevision.backends import CellposeBackend, get_backend
-from cellplatevision.classify import classify_growth
-from cellplatevision.confluence import compute_confluence
 from cellplatevision.dish_finder import ROI, SingleDishFinder, circular_mask
 from cellplatevision.imaging import load_image, save_image, to_bgr
 from cellplatevision.segmentation import OtsuBackend

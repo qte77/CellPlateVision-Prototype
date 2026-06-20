@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from cellplatevision.confluence import compute_confluence
+from cellplatevision.analysis import compute_confluence
 from cellplatevision.dish_finder import SingleDishFinder, circular_mask
 from cellplatevision.segmentation import OtsuBackend
 from tests.generate_synthetic import generate_dish

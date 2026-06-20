@@ -14,9 +14,9 @@ import csv
 import sys
 from pathlib import Path
 
+from cellplatevision.analysis import compute_confluence
 from cellplatevision.backends import get_backend
 from cellplatevision.config import load_settings
-from cellplatevision.confluence import compute_confluence
 from cellplatevision.dish_finder import SingleDishFinder, circular_mask
 from cellplatevision.imaging import load_image
 
