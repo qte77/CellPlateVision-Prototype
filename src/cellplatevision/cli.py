@@ -48,7 +48,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if args.command != "run":
         parser.print_help()
-        return 0
+        return 2
     settings = load_settings(args.config)
     if args.dry_run:
         return 0
