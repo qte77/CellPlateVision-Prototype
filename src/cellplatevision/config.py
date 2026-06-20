@@ -43,6 +43,9 @@ class Settings(BaseSettings):
     confluence_threshold: float = 0.20
     backend: str = "otsu"
     use_gpu: bool = False
+    cellpose_model: str = "cyto3"
+    cellpose_model_gpu: str = "cpsam_v2"
+    escalate_on_low_confidence: bool = True
     hough: HoughParams = Field(default_factory=HoughParams)
     otsu: OtsuParams = Field(default_factory=OtsuParams)
     elabftw_host: str = "http://localhost:3148/api/v2"
